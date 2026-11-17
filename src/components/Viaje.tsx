@@ -66,7 +66,11 @@ export function Viaje() {
       for (const [id, [r0, r1]] of Object.entries(RUTAS)) {
         const k = tramo(f, r0 + 0.55, r1 + 0.55);
         const el = rutaRefs.current[id];
-        if (el) el.style.strokeDashoffset = String(1 - k);
+        if (!el) continue;
+        el.style.strokeDashoffset = String(1 - k);
+        el.style.opacity = k > 0 ? '1' : '0';
+        // Grosor constante en pantalla sin vector-effect (que rompe pathLength en Chrome).
+        el.style.strokeWidth = String(3 / zz);
       }
       fichaRefs.current.forEach((el, j) => {
         if (!el) return;
@@ -148,9 +152,8 @@ export function Viaje() {
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    vectorEffect="non-scaling-stroke"
                     pathLength={1}
-                    strokeDasharray="1"
+                    strokeDasharray="1 1"
                     style={{strokeDashoffset: 1}}
                   />
                 </g>
